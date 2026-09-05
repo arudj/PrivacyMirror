@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Privacy Mirror",
+  "version": "0.1.0",
+  "description": "See what this site and its trackers can learn about you. All analysis happens locally, on-device.",
+
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "webNavigation",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+
+  "background": {
+    "service_worker": "service-worker.js",
+    "type": "module"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["scanner.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_title": "Privacy Mirror"
+  }
+}
