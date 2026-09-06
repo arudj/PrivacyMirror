@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!--
+    Le TITRE est important : c'est la seule chose (avec l'URL) que
+    inferFromPage() (analyzer/inferenceEngine.ts) regarde pour deviner des
+    centres d'intérêt. Volontairement bourré de mots-clés façon site
+    "gratuit" plein de pubs, pour déclencher plusieurs inférences d'un coup
+    (Gaming, Shopping, et une catégorie sensible), comme l'exemple du PDF.
+  -->
+  <title>Best Gaming GPUs 2026 | Steam Sale, Shop Now, Clinic Symptom Checker Inside</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 40px auto; padding: 0 16px; }
+    .card { border: 1px solid #ddd; border-radius: 8px; padding: 16px; margin: 12px 0; }
+    .price { color: #c62828; font-weight: 700; }
+    button { background: #1565c0; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; }
+    .note { background: #fff3cd; border: 1px solid #ffe69c; padding: 10px 14px; border-radius: 6px; font-size: 14px; }
+    code { background: #f3f3f3; padding: 1px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <p class="note">
+    <strong>Page de démo Privacy Mirror.</strong> Elle simule un site
+    "gratuit" typique : trackers analytics/pub/social, plusieurs signaux de
+    fingerprinting, et un titre bourré de mots-clés. Ouvrez l'extension
+    <em>avant</em> et <em>après</em> avoir cliqué "Protect me", puis
+    rechargez la page pour voir la différence (cf. section 9 du PDF).
+  </p>
+
+  <h1>Best Gaming GPUs 2026</h1>
+  <p>Our top picks for gamers this year — plus today's exclusive shopping deals.</p>
+
+  <div class="card">
+    <h3>RTX Turbo 5090 Ti</h3>
+    <p>The ultimate GPU for Steam, PlayStation emulation and 4K gaming.</p>
+    <p class="price">$1,299 <span style="color:#2e7d32">— 20% OFF today</span></p>
+    <button>Add to cart</button>
+  </div>
+
+  <div class="card">
+    <h3>Xbox-ready Gaming Laptop</h3>
+    <p>Portable gaming rig, on sale this week only.</p>
+    <p class="price">$999</p>
+    <button>Shop now</button>
+  </div>
+
+  <hr />
+  <p style="font-size:12px;color:#888">
+    Sponsored content · this page loads third-party scripts and pixels below,
+    exactly like a real ad-supported site would.
+  </p>
+
+  <!-- ============ TRACKERS TIERS (section 6.A du PDF) ============ -->
+  <!-- Analytics : sera catégorisé "analytics" par data/trackers.ts -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEMO12345"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-DEMO12345');
+  </script>
+
+  <!-- Social/Ads : sera catégorisé "social" par data/trackers.ts -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window, document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    try { fbq('init', 'DEMO000000'); fbq('track', 'PageView'); } catch (e) {}
+  </script>
+
+  <!-- Publicité : sera catégorisé "advertising" par data/trackers.ts -->
+  <img src="https://doubleclick.net/pixel?demo=1" width="1" height="1" style="display:none" alt="" />
+
+  <!-- ============ FINGERPRINTING SIGNALS (section 6.B du PDF) ============ -->
+  <canvas id="fp-canvas" width="200" height="50" style="display:none"></canvas>
+  <script>
+    // Canvas fingerprint classique : dessiner du texte puis lire les pixels.
+    const canvas = document.getElementById('fp-canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = 'top';
+    ctx.font = '14px Arial';
+    ctx.fillText('privacy-mirror-demo', 2, 2);
+    const canvasFingerprint = canvas.toDataURL();
+
+    // WebGL fingerprint : lire vendor/renderer via getParameter.
+    try {
+      const glCanvas = document.createElement('canvas');
+      const gl = glCanvas.getContext('webgl');
+      if (gl) {
+        gl.getParameter(gl.VENDOR);
+        gl.getParameter(gl.RENDERER);
+      }
+    } catch (e) {}
+
+    // Audio fingerprint : instancier un AudioContext.
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) new AudioCtx();
+    } catch (e) {}
+
+    // Screen + timezone + hardware : lectures classiques de fingerprinting.
+    const signals = {
+      screen: `${screen.width}x${screen.height}x${screen.colorDepth}`,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      cores: navigator.hardwareConcurrency,
+      memory: navigator.deviceMemory,
+    };
+    console.log('[demo] fingerprint signals collected (not sent anywhere):', signals);
+  </script>
+
+  <p style="font-size:12px;color:#888">
+    Made-up domain names above (e.g. <code>G-DEMO12345</code>) — some
+    requests may fail to actually load (no internet, or blocked), that's
+    fine: <code>chrome.webRequest</code> detects the attempt regardless of
+    whether the server responds.
+  </p>
+</body>
+</html>
