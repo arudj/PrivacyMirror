@@ -1,10 +1,5 @@
-/* la table de référence des domaines connus. */
-
 import { TrackerCategory } from "../types";
 
-// Table statique de référence : domaine -> catégorie.
-// Volontairement limitée à des exemples représentatifs pour la démo,
-// pas une liste exhaustive (voir consigne "ne pas tout détecter").
 export const KNOWN_TRACKERS: Record<string, TrackerCategory> = {
   "google-analytics.com": "analytics",
   "googletagmanager.com": "analytics",
@@ -27,8 +22,6 @@ export const KNOWN_TRACKERS: Record<string, TrackerCategory> = {
   "tiktok.com": "social",
 };
 
-// Une simple heuristique de mots-clés pour les domaines pas dans la table,
-// utile pour la démo sans avoir à tout lister à la main.
 const CATEGORY_HINTS: [RegExp, TrackerCategory][] = [
   [/analytics|stats|metrics/i, "analytics"],
   [/ads|advert|doubleclick|adserver/i, "advertising"],
@@ -36,11 +29,19 @@ const CATEGORY_HINTS: [RegExp, TrackerCategory][] = [
 ];
 
 export function categorizeDomain(domain: string): TrackerCategory {
-  if (KNOWN_TRACKERS[domain]) {
-    return KNOWN_TRACKERS[domain];
+  for (const [knownDomain, category] of Object.entries(KNOWN_TRACKERS)) {
+    if (domain === knownDomain || domain.endsWith(`.${knownDomain}`)) {
+      return category;
+    }
   }
   for (const [pattern, category] of CATEGORY_HINTS) {
     if (pattern.test(domain)) return category;
   }
   return "unknown";
+}
+
+export function isKnownTrackerDomain(domain: string): boolean {
+  return Object.keys(KNOWN_TRACKERS).some(
+    (known) => domain === known || domain.endsWith(`.${known}`),
+  );
 }

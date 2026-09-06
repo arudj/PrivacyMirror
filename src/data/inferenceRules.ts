@@ -4,8 +4,6 @@ export interface InferenceRule {
   sensitive: boolean;
 }
 
-// Base de règles volontairement limitée pour la démo (cf. PDF section 7).
-// Chaque règle = un ensemble de mots-clés associés à une catégorie d'intérêt.
 export const inferenceRules: InferenceRule[] = [
   {
     keywords: ["football", "soccer", "fifa"],
@@ -30,11 +28,6 @@ export const inferenceRules: InferenceRule[] = [
   {
     keywords: ["diagnosis", "symptom", "therapy", "medication", "clinic"],
     category: "Health interest",
-    sensitive: true,
-  },
-  {
-    keywords: ["dating", "lgbt", "relationship-advice"],
-    category: "Personal/relationship interest",
     sensitive: true,
   },
 ];
