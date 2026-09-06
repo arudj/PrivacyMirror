@@ -1,15 +1,23 @@
-// src/types/index.ts (version fusionnée)
+// Types partagés entre le scanner (Personne A), l'analyzer (Personne B) et l'UI.
+
 export type TrackerCategory =
-  | "first-party" | "analytics" | "advertising" | "social" | "fingerprinting" | "unknown";
+  | "first-party"
+  | "analytics"
+  | "advertising"
+  | "social"
+  | "fingerprinting"
+  | "unknown";
 
 export type RiskLevel = "low" | "medium" | "high";
 
+// Une requête détectée brute par le content script / service worker
 export interface DetectedRequest {
   domain: string;
   url: string;
   timestamp: number;
 }
 
+// Résultat de l'analyse d'un tracker par trackerAnalyzer.ts
 export interface AnalyzedTracker {
   domain: string;
   category: TrackerCategory;
@@ -17,48 +25,43 @@ export interface AnalyzedTracker {
   explanation: string;
 }
 
-export type FingerprintSignalType =
-  | "canvas"
-  | "webgl"
-  | "audio"
-  | "screen"
-  | "timezone"
-  | "fonts"
-  | "hardwareConcurrency"
-  | "deviceMemory";
-
+// Signal de fingerprinting détecté par Personne A
 export interface FingerprintSignal {
-  type: FingerprintSignalType;
+  type:
+    | "canvas"
+    | "webgl"
+    | "audio"
+    | "screen"
+    | "timezone"
+    | "fonts"
+    | "hardwareConcurrency"
+    | "deviceMemory";
   severity: "low" | "medium" | "high";
 }
 
+// Résultat du moteur d'inférence
 export interface InferenceResult {
   label: string;
-  confidence: number;
+  confidence: number; // 0 à 1
   sensitive: boolean;
   reasons: string[];
 }
 
+// Score de risque global de la page
 export interface RiskScoreResult {
-  score: number;
+  score: number; // 0 à 100
   level: RiskLevel;
-  breakdown: { label: string; points: number }[];
+  breakdown: {
+    label: string;
+    points: number;
+  }[];
 }
 
+// Objet final agrégé, stocké dans chrome.storage.local et consommé par l'UI React
 export interface PageAnalysis {
   domain: string;
   trackers: AnalyzedTracker[];
   fingerprintSignals: FingerprintSignal[];
   inferences: InferenceResult[];
   riskScore: RiskScoreResult;
-  protectionActive: boolean;   // ajouté (nécessaire au service worker)
-  updatedAt: number;           // ajouté (nécessaire au service worker)
 }
-
-export type PrivacyMirrorMessage =
-  | { type: "SCANNER_FINGERPRINT_DETECTED"; payload: { signal: FingerprintSignal } }
-  | { type: "PAGE_METADATA"; payload: { title: string; url: string } }
-  | { type: "GET_ANALYSIS"; payload: { domain: string } }
-  | { type: "ANALYSIS_RESULT"; payload: { analysis: PageAnalysis | null } }
-  | { type: "ENABLE_PROTECTION"; payload: { domain: string } }
-  | { type: "DISABLE_PROTECTION"; payload: { domain: string } };

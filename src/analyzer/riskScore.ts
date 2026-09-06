@@ -1,4 +1,3 @@
-// src/analyzer/riskScore.ts
 import {
   AnalyzedTracker,
   FingerprintSignal,
@@ -7,6 +6,8 @@ import {
   RiskScoreResult,
 } from "../types";
 
+// Pondération telle que définie dans le PDF (section 4.2.3).
+// Ce n'est pas une mesure scientifique : un indicateur pédagogique.
 const WEIGHTS = {
   THIRD_PARTY_TRACKERS: 20,
   FINGERPRINTING: 25,
@@ -15,6 +16,7 @@ const WEIGHTS = {
   CROSS_SITE_IDENTIFIERS: 10,
 };
 
+// Seuil au-delà duquel on considère qu'il y a "beaucoup" de tiers
 const MANY_THIRD_PARTIES_THRESHOLD = 5;
 
 function levelFromScore(score: number): RiskLevel {

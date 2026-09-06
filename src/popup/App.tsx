@@ -1,27 +1,22 @@
 import { useState } from "react";
 import { PageAnalysis } from "../types";
-import { RiskBadge } from "./components/RiskBadge";
 import { NetworkSection } from "./components/NetworkSection";
 import { FingerprintSection } from "./components/FingerprintSection";
 import { InferenceSection } from "./components/InferenceSection";
 import { ProtectButton } from "./components/ProtectButton";
+import { RiskBadge } from "./components/RiskBadge";
 
 interface AppProps {
   analysis: PageAnalysis;
   onProtect: () => void;
-  onReset: () => void;
 }
 
-export function App({ analysis, onProtect, onReset }: AppProps) {
-  const [protectedState, setProtectedState] = useState(analysis.protectionActive);
+export function App({ analysis, onProtect }: AppProps) {
+  const [protectedState, setProtectedState] = useState(false);
 
   const handleProtect = () => {
     onProtect();
     setProtectedState(true);
-  };
-
-  const handleReset = () => {
-    onReset();
   };
 
   return (
@@ -39,25 +34,6 @@ export function App({ analysis, onProtect, onReset }: AppProps) {
       <InferenceSection inferences={analysis.inferences} />
 
       <ProtectButton onProtect={handleProtect} disabled={protectedState} />
-
-      {protectedState && (
-        <button
-          onClick={handleReset}
-          style={{
-            width: "100%",
-            padding: "8px",
-            marginTop: "8px",
-            background: "none",
-            border: "1px solid #ccc",
-            borderRadius: "6px",
-            color: "#555",
-            fontSize: "12px",
-            cursor: "pointer",
-          }}
-        >
-          Reset (disable protection & reload page)
-        </button>
-      )}
     </div>
   );
 }
